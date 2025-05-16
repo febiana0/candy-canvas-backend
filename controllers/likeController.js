@@ -5,36 +5,35 @@ exports.toggleLike = async (req, res) => {
   const { user_id, news_id } = req.body;
 
   try {
-    const conn = await db.getConnection();
+    const connection = await db.getConnection();
 
-    // Cek apakah sudah ada like
-    const result = await conn.execute(
-      `SELECT * FROM likes WHERE user_id = :user_id AND news_id = :news_id`,
-      [user_id, news_id],
-      { outFormat: oracledb.OUT_FORMAT_OBJECT }
-    );
+    // Cek apakah like sudah ada
+    const checkSql = `SELECT * FROM likes WHERE user_id = :user_id AND news_id = :news_id`;
+    const checkResult = await connection.execute(checkSql, [user_id, news_id]);
 
-    if (result.rows.length > 0) {
-      // Sudah ada => hapus like (unlike)
-      await conn.execute(
-        `DELETE FROM likes WHERE user_id = :user_id AND news_id = :news_id`,
-        [user_id, news_id],
-        { autoCommit: true }
-      );
+    if (checkResult.rows.length > 0) {
+      // Sudah ada => Hapus like (unlike)
+      const deleteSql = `DELETE FROM likes WHERE user_id = :user_id AND news_id = :news_id`;
+      await connection.execute(deleteSql, [user_id, news_id], { autoCommit: true });
       res.json({ message: 'Like removed' });
     } else {
-      // Belum ada => tambahkan like
-      await conn.execute(
-        `INSERT INTO likes (user_id, news_id) VALUES (:user_id, :news_id)`,
-        [user_id, news_id],
-        { autoCommit: true }
-      );
+      // Belum ada => Tambah like
+      const insertSql = `INSERT INTO likes (user_id, news_id) VALUES (:user_id, :news_id)`;
+      await connection.execute(insertSql, [user_id, news_id], { autoCommit: true });
       res.json({ message: 'Like added' });
     }
 
-    await conn.close();
+    await connection.close();
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error', error: err });
-  }
-};
+    console.error('LIKE ERROR:', err); // tampilkan error lengkap di terminal
+    res.status(500).json({ 
+    message: 'Server error', 
+    error: {
+      message: err.message,
+      errorNum: err.errorNum,
+      code: err.code,
+      stack: err.stack
+    } 
+  });
+}
+}

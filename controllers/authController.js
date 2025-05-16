@@ -6,17 +6,28 @@ const register = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
+    console.log("Register request body:", req.body);
+
     const existingUser = await findByEmail(email);
-    if (existingUser) return res.status(400).json({ message: 'Email already used' });
+    console.log("Existing user:", existingUser);
+
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already used' });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await createUser({ name, email, password: hashedPassword, role });
+    console.log("Hashed password:", hashedPassword);
+
+    const newUser = await createUser({ name, email, password: hashedPassword, role });
+    console.log("New user created:", newUser);
 
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
+    console.error("Register Error:", err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -36,6 +47,7 @@ const login = async (req, res) => {
 
     res.json({ token, user: { id: user.ID, name: user.NAME, email: user.EMAIL, role: user.ROLE } });
   } catch (err) {
+    console.error("Login error:", err);
     res.status(500).json({ message: 'Server error', error: err });
   }
 };
