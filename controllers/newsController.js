@@ -31,12 +31,11 @@ exports.getNewsById = async (req, res) => {
 exports.createNews = async (req, res) => {
   try {
     const { title, content, category_id, image_url } = req.body;
-
     const result = await newsModel.createNews({
       title,
       content,
       category_id,
-      image_url,
+      image_url: image_url,
     });
 
     res.status(201).json({

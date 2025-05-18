@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - Berita</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <h1>Admin Panel - Manajemen Berita</h1>
+
+ <form id="create-news-form" enctype="multipart/form-data">
+  <input type="text" id="title" placeholder="Judul" required>
+  <textarea id="content" placeholder="Isi berita" required></textarea>
+  <input type="text" id="categoryId" placeholder="ID Kategori" required>
+  <input type="file" id="image"  name="image" accept="image/*" required>
+  <button type="submit">Tambah Berita</button>
+</form>
+
+  <div id="news-list"></div>
+
+  <h2>Daftar Berita</h2>
+  <ul id="news-list"></ul>
+
+  <script src="/js/admin-news.js"></script>
+</body>
+</html>
