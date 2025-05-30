@@ -9,7 +9,7 @@ const newsRoutes = require('./routes/newsRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 1212;
 
 // Middleware
 app.use(cors());

@@ -35,7 +35,7 @@ exports.createNews = async (req, res) => {
       title,
       content,
       category_id,
-      image_url: image_url,
+      image_url,
     });
 
     res.status(201).json({
@@ -47,7 +47,7 @@ exports.createNews = async (req, res) => {
   }
 };
 
-// PUT update berita berdasarkan ID (admin only)
+// PUT update berita berdasarkan ID
 exports.updateNews = async (req, res) => {
   try {
     const result = await newsModel.updateNews(req.params.id, req.body);

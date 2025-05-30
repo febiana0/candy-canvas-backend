@@ -4,6 +4,9 @@ exports.create = async (req, res) => {
   const { newsId, content } = req.body;
   const userId = req.user.id;
 
+  console.log('Received comment:', req.body);
+
+
   try {
     await commentModel.createComment(userId, newsId, content);
     res.status(201).json({ message: 'Comment added successfully' });
@@ -48,4 +51,9 @@ exports.remove = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err });
   }
+};
+
+exports.getByNewsQuery = (req, res) => {
+  const newsId = req.query.news_id;
+  // ...ambil komentar berdasarkan newsId...
 };
